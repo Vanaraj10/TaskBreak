@@ -9,12 +9,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func AutMiddleware() gin.HandlerFunc {
+func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// Here you would typically check for a JWT token in the request headers
-		// and validate it. If valid, you would set the user context
 		authHeader := c.GetHeader("Authorization")
-		
+
 		if authHeader == "" || !strings.HasPrefix(authHeader, "Bearer ") {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 				"error": "Authorization header is missing or invalid",
@@ -23,19 +21,25 @@ func AutMiddleware() gin.HandlerFunc {
 		}
 		tokenString := strings.TrimPrefix(authHeader, "Bearer ")
 
-		// Parse and validate the token here
-
 		token, err := jwt.Parse(tokenString, func(t *jwt.Token) (interface{}, error) {
+			// Validate the signing method
+			if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
+				return nil, jwt.NewValidationError("invalid signing method", jwt.ValidationErrorSignatureInvalid)
+			}
 			return []byte(os.Getenv("JWT_SECRET")), nil
 		})
 
-		if err != nil || ! token.Valid {
+		if err != nil || !token.Valid {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 				"error": "Invalid or expired token",
 			})
 			return
 		}
-		c.Next()
 
+		if claims, ok := token.Claims.(jwt.MapClaims); ok {
+			c.Set("email", claims["email"])
+		}
+
+		c.Next()
 	}
 }

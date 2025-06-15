@@ -43,16 +43,16 @@ func Register(c *gin.Context) {
 
 func Login(c *gin.Context) {
 	var reqUser models.User
-	
+
 	c.BindJSON(&reqUser)
 	userCollection := config.GetCollection("users")
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-
 	var dbUser models.User
-	err := userCollection.FindOne(ctx,bson.M{"email": reqUser.Email}).Decode(&dbUser)
+	err := userCollection.FindOne(ctx, bson.M{"email": reqUser.Email}).Decode(&dbUser)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+		return
 	}
 	// Compare the password
 	err = bcrypt.CompareHashAndPassword([]byte(dbUser.Password), []byte(reqUser.Password))
@@ -65,6 +65,6 @@ func Login(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Login successful",
-		 "token":   token,
+		"token":   token,
 	})
 }
