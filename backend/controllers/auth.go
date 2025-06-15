@@ -56,15 +56,23 @@ func Login(c *gin.Context) {
 	}
 	// Compare the password
 	err = bcrypt.CompareHashAndPassword([]byte(dbUser.Password), []byte(reqUser.Password))
-
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid password"})
 		return
 	}
+
 	token, _ := services.GenerateToken(dbUser.Email)
+
+	// Remove password from response
+	dbUser.Password = ""
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Login successful",
 		"token":   token,
+		"user": gin.H{
+			"id":    dbUser.ID,
+			"name":  dbUser.Name,
+			"email": dbUser.Email,
+		},
 	})
 }

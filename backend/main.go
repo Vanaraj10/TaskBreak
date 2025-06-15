@@ -24,9 +24,15 @@ func main() {
 	router.Use(middleware.CORSMiddleware())
 
 	routes.SetupRoutes(router)
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080" // Default port if not specified
 	}
-	router.Run(":" + port)
+
+	fmt.Printf("🌟 Server running on all interfaces at port %s\n", port)
+	fmt.Printf("🌐 Local access: http://localhost:%s\n", port)
+	fmt.Printf("🌐 Network access: http://192.168.94.124:%s\n", port)
+
+	router.Run("0.0.0.0:" + port)
 }
