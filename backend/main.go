@@ -9,7 +9,6 @@ import (
 	"github.com/Vanaraj10/taskmorph-backend/middleware"
 	"github.com/Vanaraj10/taskmorph-backend/routes"
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 	"github.com/robfig/cron/v3"
 )
 
@@ -25,10 +24,12 @@ func main() {
 }
 
 func startServer () {
-	err := godotenv.Load()
-	if err != nil {
-		panic("Error loading .env file")
-	}
+
+	// err := godotenv.Load()
+	// if err != nil {
+	// 	panic("Error loading .env file")
+	// }
+
 	config.ConnectDB()
 	fmt.Println("TaskMorph Backend is running...")
 	router := gin.Default()
