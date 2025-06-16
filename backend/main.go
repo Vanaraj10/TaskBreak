@@ -15,7 +15,7 @@ import (
 func main() {
 	c := cron.New()
 
-	c.AddFunc("@every 10m", func() {
+	c.AddFunc("*/10 * * * *", func() {
 		fmt.Println("Running every 5 minutes at", time.Now())
 	})
 
