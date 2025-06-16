@@ -1,5 +1,5 @@
 import React from 'react';
-import { LogOut, User, Brain } from 'lucide-react';
+import { LogOut, User, Brain, Star } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 const Layout = ({ children }) => {
@@ -14,9 +14,9 @@ const Layout = ({ children }) => {
             {/* Logo */}
             <div className="flex items-center space-x-3">
               <div className="bg-blue-600 p-2 rounded-lg">
-                <Brain className="h-6 w-6 text-white" />
+                <Star className="h-6 w-6 text-white" />
               </div>
-              <h1 className="text-xl font-bold text-white">TaskMorph</h1>
+              <h1 className="text-xl font-bold text-white">Starity</h1>
               <span className="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded-full">
                 AI-Powered
               </span>
