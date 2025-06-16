@@ -71,6 +71,11 @@ func CreateTask(c *gin.Context) {
 		return
 	}
 
+	// Assign unique IDs to each step
+	for i := range steps {
+		steps[i].ID = primitive.NewObjectID()
+	}
+
 	// Get user ID from email
 	userCollection := config.GetCollection("users")
 	var user models.User
